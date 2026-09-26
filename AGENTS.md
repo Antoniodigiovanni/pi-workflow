@@ -26,6 +26,7 @@ When a mistake or repeated correction reveals a reusable lesson, capture its con
 
 - Unless instructed otherwise, make changes on a dedicated branch. Do not commit directly to the default branch.
 - Work until the change is ready for review: implementation complete, relevant tests passing, and documentation updated where needed.
+- Open work as a pull request when review is needed. Use `dev` as the default PR base branch when it exists; otherwise use `main`. If the repository declares a different integration branch, follow that project-specific convention.
 - Stop at PR-ready state. Do not merge, rebase onto the default branch, force-push, or deploy without explicit instruction.
 
 ## Completion
