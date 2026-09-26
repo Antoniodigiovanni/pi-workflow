@@ -13,18 +13,22 @@ A reusable software engineering workflow for [Pi](https://github.com/earendil-wo
 | `prompts/*.md` | Repeatable task workflows such as `/implement` | When invoked |
 | Project `AGENTS.md` | Runtime, commands, deployment, protected data, and local conventions | In that repository |
 
-There is no extension or automatic rule mutation. Pi's native files already cover the current needs. See [philosophy](docs/philosophy.md), [testing](docs/testing-strategy.md), and [deployment](docs/deployment-strategy.md).
+The optional Databricks and MLflow extensions provide bounded read-only service access. They require an explicit `workflow.yaml` in a project before their tools can read service data. Pi's native files cover the guidance and prompt workflows. See [philosophy](docs/philosophy.md), [testing](docs/testing-strategy.md), and [deployment](docs/deployment-strategy.md).
 
 ## Set up
 
-Clone or fork this repository, then run this from the checkout to add its skills and prompts to Pi:
+Clone the repository if needed, then install from the checkout root:
 
 ```sh
+git clone https://github.com/Antoniodigiovanni/pi-workflow.git
+cd pi-workflow
+npm ci --ignore-scripts
 pi install .
 pi list
 ```
 
-Pi treats this checkout as a local package and discovers `skills/` and `prompts/`. Keep the checkout at a stable path; edits to those files are available after Pi `/reload` or a new session. To stop using the package, run `pi remove .` from the checkout. See [Pi's package documentation](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/packages.md) for other sources and package management.
+If you already have a checkout, start at `cd pi-workflow`. `pi list` should show this
+package. Restart Pi or use `/reload` in an existing session. Pi treats this checkout as a local package and discovers `skills/`, `prompts/`, and the optional service extensions. Keep the checkout at a stable path; edits to those files are available after Pi `/reload` or a new session. To stop using the package, run `pi remove .` from the checkout. See [Pi's package documentation](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/packages.md) for other sources and package management.
 
 Pi packages do not install a global `AGENTS.md`. If you have no global file yet, copy this repository's `AGENTS.md` to `~/.pi/agent/AGENTS.md` (or to `${PI_CODING_AGENT_DIR}/AGENTS.md` when that variable is set). On macOS or Linux:
 
@@ -45,6 +49,13 @@ Run the copy commands only when the destination file does not already exist. If 
 To remove the workflow, run `pi remove .` from the checkout and remove only the text you added to the global `AGENTS.md`. If you used an older version of this repository's installer, run its `uninstall.sh` or `uninstall.ps1` from that older checkout before switching to the package. Pi's package command does not manage files created by that installer.
 
 ## Use
+
+The service tools remain inactive until a project has `workflow.yaml`. To use them,
+copy `workflow.example.yaml` from this checkout to the project root, set the project
+mode and exact service allowlists, then configure approved credentials outside Git.
+Empty scopes deny service access. The two extensions are read-only; see
+`docs/configuration/` for limits. This service configuration does not grant permission
+to disclose data to a model or publish it.
 
 Pi exposes prompt files as `/implement`, `/debug`, `/test`, `/review`, `/refactor`, `/productionize`, `/investigate-failure`, `/architecture-review`, and `/review-lessons`. It can discover relevant skills automatically, or you can call `/skill:pyspark-development`, for example. Skills are composable; load only those relevant to the task.
 
@@ -76,9 +87,12 @@ Fork the repo to change the baseline. Add a narrowly scoped skill under `skills/
 ```text
 pi-workflow/
 ├── AGENTS.md                 global engineering standard
-├── skills/                   15 on-demand domain skills
-├── prompts/                  9 slash-command workflows
+├── extensions/               Databricks and MLflow read-only tools
+├── src/                      Service policy and bounded HTTP helpers
+├── skills/                   on-demand domain skills
+├── prompts/                  slash-command workflows
+├── tests/                    synthetic service tests
 └── docs/                     rationale, testing, deployment, lessons, integration
 ```
 
-No Pi extension is included yet. A future extension is appropriate only if a repeated need requires executable session state or a tool, such as capturing structured lessons or enforcing a deployment gate. Global behavior changes should be reviewed before implementation.
+The Databricks and MLflow extensions are read-only service tools; service authorization remains authoritative. See `docs/configuration/` and `workflow.example.yaml` before enabling them.

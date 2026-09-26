@@ -1,0 +1,24 @@
+project:
+  type: internal
+
+data_policy:
+  allow_schema_metadata: true
+  allow_aggregates: true
+  approved_models: []
+
+databricks:
+  enabled: false
+  allowed_catalogs: []
+  allowed_schemas: []
+  warehouse: ""
+  row_access: false
+  approved_tables: {}
+  minimum_cohort_size: 10
+  sensitive_tags: [pii, sensitive, confidential, restricted, personal]
+
+mlflow:
+  enabled: false
+  allowed_experiments: []
+  allowed_metadata_keys: []
+  allow_artifacts: false
+  allowed_artifact_paths: []
