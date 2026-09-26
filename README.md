@@ -17,15 +17,18 @@ The optional Databricks and MLflow extensions provide bounded read-only service 
 
 ## Set up
 
-Clone or fork this repository, then install dependencies and add its skills, prompts, and service tools to Pi:
+Clone the repository if needed, then install from the checkout root:
 
 ```sh
+git clone https://github.com/Antoniodigiovanni/pi-workflow.git
+cd pi-workflow
 npm ci --ignore-scripts
 pi install .
 pi list
 ```
 
-Pi treats this checkout as a local package and discovers `skills/`, `prompts/`, and the optional service extensions. Keep the checkout at a stable path; edits to those files are available after Pi `/reload` or a new session. To stop using the package, run `pi remove .` from the checkout. See [Pi's package documentation](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/packages.md) for other sources and package management.
+If you already have a checkout, start at `cd pi-workflow`. `pi list` should show this
+package. Restart Pi or use `/reload` in an existing session. Pi treats this checkout as a local package and discovers `skills/`, `prompts/`, and the optional service extensions. Keep the checkout at a stable path; edits to those files are available after Pi `/reload` or a new session. To stop using the package, run `pi remove .` from the checkout. See [Pi's package documentation](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/packages.md) for other sources and package management.
 
 Pi packages do not install a global `AGENTS.md`. If you have no global file yet, copy this repository's `AGENTS.md` to `~/.pi/agent/AGENTS.md` (or to `${PI_CODING_AGENT_DIR}/AGENTS.md` when that variable is set). On macOS or Linux:
 
@@ -47,12 +50,12 @@ To remove the workflow, run `pi remove .` from the checkout and remove only the 
 
 ## Use
 
-For service tools, copy `workflow.example.yaml` to `workflow.yaml` in the project root,
-set the project mode and exact service allowlists, then configure approved credentials
-outside Git. Empty scopes deny service access. The two extensions are read-only; see
-`docs/configuration/` for limits. Research disclosure policy remains in `research.yaml`
-when pi-research-scientist is also installed.
-
+The service tools remain inactive until a project has `workflow.yaml`. To use them,
+copy `workflow.example.yaml` from this checkout to the project root, set the project
+mode and exact service allowlists, then configure approved credentials outside Git.
+Empty scopes deny service access. The two extensions are read-only; see
+`docs/configuration/` for limits. This service configuration does not grant permission
+to disclose data to a model or publish it.
 
 Pi exposes prompt files as `/implement`, `/debug`, `/test`, `/review`, `/refactor`, `/productionize`, `/investigate-failure`, `/architecture-review`, and `/review-lessons`. It can discover relevant skills automatically, or you can call `/skill:pyspark-development`, for example. Skills are composable; load only those relevant to the task.
 
